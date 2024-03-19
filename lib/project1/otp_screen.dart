@@ -1,3 +1,5 @@
+import 'package:blood_donorapp/project1/register_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:blood_donorapp/widgets/custom_button.dart';
 import 'package:pinput/pinput.dart';
@@ -10,6 +12,9 @@ class OTPScreen extends StatefulWidget {
 }
 
 class _MyOtpState extends State<OTPScreen> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  var code = '';
+
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
@@ -83,9 +88,10 @@ class _MyOtpState extends State<OTPScreen> {
                   defaultPinTheme: defaultPinTheme,
                   focusedPinTheme: focusedPinTheme,
                   submittedPinTheme: submittedPinTheme,
-                  pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                   showCursor: true,
-                  onCompleted: (pin) => print(pin),
+                  onCompleted: (value) {
+                    code = value;
+                  },
                 ),
                 SizedBox(
                   height: 15,
@@ -93,7 +99,23 @@ class _MyOtpState extends State<OTPScreen> {
                 SizedBox(
                   width: double.infinity,
                   height: 50,
-                  child: CustomButton(text: "Verify OTP", onPressed: () {}),
+                  child: CustomButton(
+                      text: "Verify OTP",
+                      onPressed: () async {
+                        try {
+                          PhoneAuthCredential credential =
+                              PhoneAuthProvider.credential(
+                                  verificationId: RegisterScreen.verify,
+                                  smsCode: code);
+
+                          // Sign the user in (or link) with the credential
+                          await auth.signInWithCredential(credential);
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/home', (route) => false);
+                        } catch (e) {
+                          print("wrong otp");
+                        }
+                      }),
                 ),
                 SizedBox(
                   height: 50,

@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:blood_donorapp/project1/add.dart';
 import 'package:blood_donorapp/project1/otp_screen.dart';
-import 'package:blood_donorapp/project1/update.dart';
 import 'package:blood_donorapp/project1/register_screen.dart';
-import 'package:blood_donorapp/provider/auth_provider.dart';
+import 'package:blood_donorapp/project1/update.dart';
+import 'package:blood_donorapp/project1/register.dart';
 import 'package:flutter/material.dart';
 import 'package:blood_donorapp/project1/home.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Demo App",
       routes: {
-        '/': (context) => HomePage(),
+        '/': (context) => RegisterScreen(),
+        '/home': (context) => HomePage(),
         '/add': (context) => AddUser(),
         '/update': (context) => UpdateDonor(),
         '/otp':(context) => OTPScreen(),

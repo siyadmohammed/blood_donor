@@ -1,4 +1,3 @@
-import 'package:blood_donorapp/provider/auth_provider.dart';
 import 'package:blood_donorapp/widgets/custom_button.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +7,7 @@ import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
+  static String verify = '';
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -15,6 +15,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   var phone = '';
+  
 
   Country selectedCountry = Country(
       phoneCode: "91",
@@ -127,17 +128,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 50,
                   child: CustomButton(
                       text: "Send Code",
-                      onPressed: () async{
+                      onPressed: () async {
                         await FirebaseAuth.instance.verifyPhoneNumber(
-                          phoneNumber: '${selectedCountry.phoneCode + phone}',
+                          phoneNumber:
+                              '+' + '${selectedCountry.phoneCode}' + '$phone',
                           verificationCompleted:
                               (PhoneAuthCredential credential) {},
                           verificationFailed: (FirebaseAuthException e) {},
-                          codeSent:
-                              (String verificationId, int? resendToken) {},
+                          codeSent: (String verificationId, int? resendToken) {
+                            RegisterScreen.verify = verificationId;
+                            Navigator.pushNamed(context, "/otp");
+                          },
                           codeAutoRetrievalTimeout: (String verificationId) {},
                         );
-                        // Navigator.pushNamed(context, "/otp");
                       }),
                 )
               ],
